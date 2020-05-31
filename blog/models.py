@@ -1,3 +1,4 @@
+from taggit.managers import TaggableManager
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
@@ -24,6 +25,8 @@ class Post(models.Model):
     updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
 
+    tags = TaggableManager()        # tag
+
     objects = models.Manager()       # Менеджер обьектов по умолчанию
     published = PublishManager()    # Пользовательский менеджер обьектов
 
@@ -46,7 +49,7 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     name = models.CharField(max_length=80)
     email = models.EmailField()
-    body = models.TextField()
+    body = models.TextField(max_length=15000)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     activate = models.BooleanField(default=True)

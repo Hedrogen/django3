@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'taggit',
+    'myblog.apps.MyblogConfig',
 ]
 
 MIDDLEWARE = [
@@ -82,7 +85,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
@@ -101,6 +103,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Email settings
+
+
+EMAIL_USE_TLS = TrueEMAIL_HOST = 'gitaglotus@gmail.com'
+EMAIL_HOST_USER = 'gitaglotus@gmail.com'
+EMAIL_HOST_PASSWORD = 'pass'
+EMAIL_PORT = 993
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -115,8 +124,15 @@ USE_L10N = True
 
 USE_TZ = True
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+LOGIN_REDIRECT_URL = '/blog'
+SITE_ID = 1
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)

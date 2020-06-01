@@ -7,6 +7,10 @@
     <link href="{% static "css/blog.css" %}" rel="stylesheet">
 </head>
 <body>
+
+    <!-- верхняя панелька -->
+    {% include "blog/includes/top.html" %}
+
     <div id="content">
         {% block content %}
         {% endblock %}

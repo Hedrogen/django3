@@ -27,3 +27,6 @@ def all_tags():
 def show_latest_posts(count=2):
     latest_posts = Post.published.order_by('-publish')[:count]
     return {'latest_posts': latest_posts}
+
+# @register.inclusion_tag('blog/post/sidebar_search.html')
+# def post_search():

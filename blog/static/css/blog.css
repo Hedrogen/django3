@@ -58,15 +58,15 @@ input, textarea {
     clear:both;
     float:left;
     margin:0 0 10px;
-    background:#ededed;
-    border:0;
+    background: #ededed;
+    border: 0;
     padding:6px 10px;
     font-size:12px;
 }
 input[type=submit] {
     font-weight:bold;
     background: #278609;
-    color:#fff;
+    color: #eeebeb;
     padding:10px 20px;
     font-size:14px;
     text-transform:uppercase;
@@ -85,6 +85,7 @@ input[type=submit] {
 .comment:nth-child(even) {
     background:#efefef;
 }
+
 .comment .info {
     font-weight:bold;
     font-size:12px;
@@ -125,4 +126,9 @@ input[type=submit] {
     float: right;
     padding-left: 40px;
 }
+
+.side_text {
+    background-color: #b1e8d2;
+}
+
 

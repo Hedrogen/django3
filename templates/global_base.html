@@ -7,14 +7,21 @@
     <link href="{% static "css/blog.css" %}" rel="stylesheet">
 </head>
 <body>
-
-    <!-- верхняя панелька -->
     {% include "blog/includes/top.html" %}
     <div id="content">
         {% block content %}
 
         {% endblock %}
     </div>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">
+                {{ message|safe }}
+                <a href="#" class="close">x</a>
+            {% endfor %}
+        </ul>
+    {% endif %}
 {#    {% include 'blog/includes/sidebar.html' %}#}
     <div id="sidebar">
         <h1><a href="{% url "blog:post_list" %}">Main page</a></h1>

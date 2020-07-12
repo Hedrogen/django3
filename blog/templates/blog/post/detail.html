@@ -27,6 +27,9 @@
           {{ total_comments }} comment{{ total_comments|pluralize }}
         </h2>
     {% endwith %}
+    {% for image in images %}
+        <img src="{{ image.image.url }}"  alt="">
+    {% endfor %}
     {%for comment in comments %}
         <div class="comment">
             <p class="info">

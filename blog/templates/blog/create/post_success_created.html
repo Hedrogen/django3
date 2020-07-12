@@ -1,0 +1,9 @@
+{% extends 'global_base.html' %}
+
+{% block title %} Post created {% endblock %}
+
+
+{% block content %}
+    <h1>Post successfully created</h1>
+    <p>You can return <a href="{% url 'blog:post_list' %}">main page</a> or <a href="{% url 'blog:post_create_url' %}">create</a> another post</p>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'global_base.html' %}
+
+{% block title %} Post create {% endblock %}
+
+{% block content %}
+    {% if request.user.is_authenticated %}
+        <form action="{% url 'blog:post_create_url' %}" method="post">
+            {% csrf_token %}
+            {{ post_form.as_p }}
+            <input type="submit" value="create">
+        </form>
+    {% else %}
+        <h1>Unauthorized users cannot create posts</h1>
+        <p>If you want create new post you need <a href="{% url 'accounts:login' %}">login</a></p>
+        <p>If you don't have account you can <a href="#reg">create new account</a></p>
+    {% endif %}
+{% endblock %}

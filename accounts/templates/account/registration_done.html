@@ -1,0 +1,8 @@
+{% extends 'global_base.html' %}
+
+{% block title %} Successfully registered {% endblock %}
+
+{% block content %}
+    <h1>Welcome to the club, buddy!</h1>
+    <p>Now you can <a href="{% url 'accounts:login' %}">login</a></p>
+{% endblock %}

@@ -1,8 +1,15 @@
 from taggit.managers import TaggableManager
 from django.db import models
 from django.utils import timezone
+from django.utils.text import slugify
 from django.contrib.auth.models import User
 from django.urls import reverse
+from time import time
+
+
+def make_slug(st):
+    new_slug = slugify(st) + '-' + str(int(time()))
+    return new_slug
 
 
 class PublishManager(models.Manager):
@@ -33,6 +40,12 @@ class Post(models.Model):
     class Meta:
         ordering = ('-publish',)
 
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.status = 'published'
+            self.slug = make_slug(self.title)
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.title
 
@@ -59,3 +72,17 @@ class Comment(models.Model):
 
     def __str__(self):
         return 'Comment by {} on {}'.format(self.name, self.post)
+
+
+class Images(models.Model):
+
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='images')
+    title = models.CharField(max_length=150, blank=True)
+    image = models.ImageField(upload_to='post_images/', blank=True)
+    upload_time = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('upload_time',)
+
+    def __str__(self):
+        return 'Post: {}, Upload_time: {}, Title: {}'.format(self.post, self.upload_time, self.title)

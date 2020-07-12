@@ -1,6 +1,6 @@
 {% extends "blog/base.html" %}
 {% load blog_tags %}
-{% block title %}My Blog{% endblock %}
+{% block title %}Posts{% endblock %}
 
 {% block content %}
   <h1>Posts</h1>
@@ -27,6 +27,8 @@
     </p>
       {# markdown  #}
     {{ post.body|markdown|truncatewords_html:30 }}
+{#      |markdown|truncatewords_html:30#}
+    <img src="{{ post.images.image.url }} " alt="">
   {% endfor %}
   {% include "pagination.html" with page=posts %}
 {% endblock %}

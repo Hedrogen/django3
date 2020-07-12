@@ -1,5 +1,6 @@
 from django.contrib import admin
-from . models import Post, Comment
+from . models import Post, Comment, Images
+from django.utils.safestring import mark_safe
 
 
 @admin.register(Post)
@@ -18,3 +19,11 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'post', 'created', 'activate')
     list_filter = ('activate', 'created', 'updated')
     search_fields = ('name', 'email', 'body')
+
+
+@admin.register(Images)
+class ImagesAdmin(admin.ModelAdmin):
+    list_display = ('post', 'title', 'upload_time', 'get_image')
+
+    def get_image(self, image):
+        return mark_safe(f'<img src={image.image.url} width=50 height=55>')

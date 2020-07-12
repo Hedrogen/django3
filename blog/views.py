@@ -2,18 +2,20 @@ from taggit.models import Tag
 from django.shortcuts import render, get_object_or_404
 from django.core.mail import send_mail
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.views.generic import ListView
+from django.views.generic import ListView, View
 from django.db.models import Count
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank, TrigramSimilarity
-from .forms import EmailPostForm, CommentForm, SearchForm
+from .forms import EmailPostForm, CommentForm, SearchForm, PostForm
 from .models import Post, Comment
+from django.contrib.auth.decorators import login_required
+
 
 # отображение списка статей
 
 
 def post_list(request, tag_slug=None):
-
     object_list = Post.published.all()
+
     tag = None
     tags = Post.tags.all()
 
@@ -44,7 +46,6 @@ def post_list(request, tag_slug=None):
 
 
 def post_search(request):
-
     form = SearchForm()
     query = None
     results = []
@@ -72,7 +73,6 @@ def post_search(request):
 
 
 def post_detail(request, year, month, day, post):
-
     post = get_object_or_404(Post,
                              slug=post,
                              status='published',
@@ -81,6 +81,7 @@ def post_detail(request, year, month, day, post):
                              publish__day=day)
 
     comments = post.comments.filter(activate=True)
+    images = post.images.all()
 
     new_comment = None
 
@@ -100,13 +101,13 @@ def post_detail(request, year, month, day, post):
     return render(request, 'blog/post/detail.html',
                   {'post': post,
                    'comments': comments,
+                   'images': images,
                    'new_comment': new_comment,
                    'comment_form': comment_form,
                    'similar_posts': similar_posts})
 
 
 def post_share(request, post_id):
-
     post = get_object_or_404(Post, id=post_id, status='published')
     sent = False
 
@@ -124,3 +125,21 @@ def post_share(request, post_id):
         form = EmailPostForm()
 
     return render(request, 'blog/post/share.html', {'post': post, 'form': form, 'sent': sent})
+
+
+'''  Относится к PostCreate
+Ничего нихера не создается, нужно как-то передать
+параметр user для поля author'''
+
+
+class PostCreate(View):
+    def get(self, request):
+        post_form = PostForm(request.POST)
+        return render(request, 'blog/create/post_create.html', {'post_form': post_form})
+
+    def post(self, request):
+        post_form = PostForm(request.POST)
+        if post_form.is_valid():
+            post_form.save(commit=False)
+            post_form.author = request.user.id
+            return render(request, 'blog/create/post_success_created.html')

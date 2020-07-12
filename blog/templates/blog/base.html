@@ -1,53 +1,53 @@
-{% load blog_tags %}
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>{% block title %}{% endblock %}</title>
-    <link href="{% static "css/blog.css" %}" rel="stylesheet">
-</head>
-<body>
-
-    <!-- верхняя панелька -->
-    {% include "blog/includes/top.html" %}
-    <div id="content">
-        {% block content %}
-
-        {% endblock %}
-    </div>
+{#{% load blog_tags %}#}
+{#{% load static %}#}
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <title>{% block title %}{% endblock %}</title>#}
+{#    <link href="{% static "css/blog.css" %}" rel="stylesheet">#}
+{#</head>#}
+{#<body>#}
+{##}
+{#    <!-- верхняя панелька -->#}
+{#    {% include "blog/includes/top.html" %}#}
+{#    <div id="content">#}
+{#        {% block content %}#}
+{##}
+{#        {% endblock %}#}
+{#    </div>#}
 {#    {% include 'blog/includes/sidebar.html' %}#}
-    <div id="sidebar">
-        <h1><a href="{% url "blog:post_list" %}">Main page</a></h1>
-        <h4>Total posts: {% total_posts %}</h4>
-        <h4>Search field</h4>
-        <ul>
-            <form action="{% url 'blog:post_search'%}" method='get'>
-                <input name = 'query' type="text" class="side_text" placeholder="Enter search text">
-                <input type="submit" value="Search">
-            </form>
-        </ul>
-        <br><br><br><br>
-        <h4>Latest posts:</h4>
-        {% show_latest_posts 3 %}
-        {% if post.tags %}
-            <h4>Tags in current post:</h4>
-        {% else %}
-            <h4>Tags:</h4>
-        {% endif %}
-        {% if post.tags %}
-            <!-- post.tags.all-->
-            <ul>
-            {% for tag in post.tags.all%}
-                <li>
-                    <a href="{% url "blog:post_list_by_tag" tag.slug %}">
-                        {{ tag.name }}
-                    </a>
-                </li>
-            {% endfor %}
-            </ul>
-        {% else %}
-            {% all_tags %}
-        {% endif %}
+{#    <div id="sidebar">#}
+{#        <h1><a href="{% url "blog:post_list" %}">Main page</a></h1>#}
+{#        <h4>Total posts: {% total_posts %}</h4>#}
+{#        <h4>Search field</h4>#}
+{#        <ul>#}
+{#            <form action="{% url 'blog:post_search'%}" method='get'>#}
+{#                <input name = 'query' type="text" class="side_text" placeholder="Enter search text">#}
+{#                <input type="submit" value="Search">#}
+{#            </form>#}
+{#        </ul>#}
+{#        <br><br><br><br>#}
+{#        <h4>Latest posts:</h4>#}
+{#        {% show_latest_posts 3 %}#}
+{#        {% if post.tags %}#}
+{#            <h4>Tags in current post:</h4>#}
+{#        {% else %}#}
+{#            <h4>Tags:</h4>#}
+{#        {% endif %}#}
+{#        {% if post.tags %}#}
+{#            <!-- post.tags.all-->#}
+{#            <ul>#}
+{#            {% for tag in post.tags.all%}#}
+{#                <li>#}
+{#                    <a href="{% url "blog:post_list_by_tag" tag.slug %}">#}
+{#                        {{ tag.name }}#}
+{#                    </a>#}
+{#                </li>#}
+{#            {% endfor %}#}
+{#            </ul>#}
+{#        {% else %}#}
+{#            {% all_tags %}#}
+{#        {% endif %}#}
 {#        <h4>Search field</h4>#}
 {#        <ul>#}
 {#        <form action="{% url 'blog:post_search'%}" method='get'>#}
@@ -56,7 +56,8 @@
 {#        </form>#}
 {#        </ul>#}
 {#        <br><br>#}
-
-    </div>
-</body>
-</html>
+{##}
+{#    </div>#}
+{#</body>#}
+{#</html>#}
+{% extends "global_base.html" %}

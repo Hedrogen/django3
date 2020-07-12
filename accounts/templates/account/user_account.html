@@ -1,0 +1,25 @@
+{% extends "global_base.html" %}
+
+
+{% block title %} My account {% endblock %}
+
+{% block content %}
+    {% if request.user.is_authenticated %}
+        <h1>Hello, {{ request.user.username|lower }}!</h1>
+        {% with total_images_created=request.user.images_created.count %}
+            <p>Welcome to your dashboard. You have bookmarked {{ total_images_created}}
+                image{{ total_images_created|pluralize }}.</p>
+        {% endwith %}
+        <p>Drag the following button to your bookmarks toolbar to bookmark images
+            from other websites → <a href="javascript:{% include "bookmarklet_launcher.js" %}" class="button">Bookmark it</a><p>
+        <h4>Change password</h4>
+        <p><a href="{% url "accounts:pass_change" %}">Change password</a></p>
+        <h2>Profile settings: </h2>
+        <form action="." method="post" enctype="multipart/form-data">
+            {{ user_form.as_p }}
+            {{ profile_form.as_p }}
+            {% csrf_token %}
+            <p><input type="submit" value="Save changes"></p>
+        </form>
+    {% endif %}
+{% endblock %}

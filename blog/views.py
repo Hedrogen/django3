@@ -5,8 +5,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView, View
 from django.db.models import Count
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank, TrigramSimilarity
-from .forms import EmailPostForm, CommentForm, SearchForm, PostForm
-from .models import Post, Comment
+from .forms import EmailPostForm, CommentForm, SearchForm, PostForm, CommentRatingForm
+from .models import Post, Comment, CommentRating
 from django.contrib.auth.decorators import login_required
 
 
@@ -143,3 +143,24 @@ class PostCreate(View):
             post_form.save(commit=False)
             post_form.author = request.user.id
             return render(request, 'blog/create/post_success_created.html')
+
+
+class AddCommentRating(View):
+
+    def post(self, request):
+        pass
+    # def get_ip(self, request):
+    #     x = request.META.get('HTTP_FORWARDED_FOR')
+    #     if x:
+    #         ip = x.split(',')[0]
+    #     else:
+    #         ip = request.META.get('REMOTE_ADDR')
+    #     return ip
+    #
+    # def post(self, request):
+    #     form = CommentRatingForm
+    #     if form.is_valid():
+    #         CommentRating.objects.update_or_create(
+    #             ip=self.get_ip(request)
+    #             comment_id=int(request.POST.get('Comment'),)
+    #         )

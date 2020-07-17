@@ -1,5 +1,5 @@
 from django.contrib import admin
-from . models import Post, Comment, Images
+from . models import Post, Comment, Images, CommentRating
 from django.utils.safestring import mark_safe
 
 
@@ -14,11 +14,22 @@ class PostAdmin(admin.ModelAdmin):
     ordering = ('status', 'publish')
 
 
+# @admin.register(CommentRating)
+class CommentRatingInline(admin.TabularInline):
+    # list_display = ('comment', 'rating')
+    model = CommentRating
+    fields = ('rating', )
+    extra = 0
+
+
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'post', 'created', 'activate')
     list_filter = ('activate', 'created', 'updated')
     search_fields = ('name', 'email', 'body')
+    inlines = [
+        CommentRatingInline,
+    ]
 
 
 @admin.register(Images)

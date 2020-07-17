@@ -8,6 +8,7 @@ from time import time
 
 
 def make_slug(st):
+
     new_slug = slugify(st) + '-' + str(int(time()))
     return new_slug
 
@@ -18,6 +19,8 @@ class PublishManager(models.Manager):
 
 
 class Post(models.Model):
+
+    """ Модель поста """
 
     STATUS_CHOICES = (
         ('draft', 'Draft'),
@@ -59,6 +62,8 @@ class Post(models.Model):
 
 class Comment(models.Model):
 
+    """ Модель комментария """
+
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     name = models.CharField(max_length=80)
     email = models.EmailField()
@@ -74,7 +79,22 @@ class Comment(models.Model):
         return 'Comment by {} on {}'.format(self.name, self.post)
 
 
+class CommentRating(models.Model):
+
+    """ Модель рейтинга комментария """
+
+    # ip = models.CharField('IP', max_length=15)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='comment_rating')
+    commetn_author = comment.name
+    rating = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.comment} - rating: {self.rating}"
+
+
 class Images(models.Model):
+
+    """ Модель изображения/изображений поста """
 
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='images')
     title = models.CharField(max_length=150, blank=True)

@@ -3,6 +3,14 @@ from . models import Post, Comment, Images, CommentRating
 from django.utils.safestring import mark_safe
 
 
+@admin.register(Images)
+class ImagesAdmin(admin.ModelAdmin):
+    list_display = ('post', 'title', 'upload_time', 'get_image')
+
+    def get_image(self, image):
+        return mark_safe(f'<img src={image.image.url} width=50 height=55>')
+
+
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = ('title', 'slug', 'author', 'publish', 'status')
@@ -14,12 +22,9 @@ class PostAdmin(admin.ModelAdmin):
     ordering = ('status', 'publish')
 
 
-# @admin.register(CommentRating)
 class CommentRatingInline(admin.TabularInline):
-    # list_display = ('comment', 'rating')
     model = CommentRating
     fields = ('rating', )
-    extra = 0
 
 
 @admin.register(Comment)
@@ -32,9 +37,4 @@ class CommentAdmin(admin.ModelAdmin):
     ]
 
 
-@admin.register(Images)
-class ImagesAdmin(admin.ModelAdmin):
-    list_display = ('post', 'title', 'upload_time', 'get_image')
 
-    def get_image(self, image):
-        return mark_safe(f'<img src={image.image.url} width=50 height=55>')

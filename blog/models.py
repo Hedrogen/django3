@@ -5,6 +5,7 @@ from django.utils.text import slugify
 from django.contrib.auth.models import User
 from django.urls import reverse
 from time import time
+from django.conf import settings
 
 
 def make_slug(st):
@@ -28,7 +29,8 @@ class Post(models.Model):
     )
     title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=250, unique_for_date='publish')
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts', blank=True)
+    # author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='blog_posts')
     body = models.TextField()
     publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
@@ -84,8 +86,7 @@ class CommentRating(models.Model):
     """ Модель рейтинга комментария """
 
     # ip = models.CharField('IP', max_length=15)
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='comment_rating')
-    commetn_author = comment.name
+    comment = models.OneToOneField(Comment, on_delete=models.CASCADE, related_name='comment_rating')
     rating = models.IntegerField(default=0)
 
     def __str__(self):

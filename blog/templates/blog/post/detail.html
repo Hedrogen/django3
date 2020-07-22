@@ -3,6 +3,9 @@
 {% block title %} {{ post.title }} {% endblock %}
 
 {% block content %}
+
+    {#  Пост  #}
+
     <h1>{{ post.title }}</h1>
     <p class="date">
         Published {{ post.publish }} by {{ post.author }}
@@ -17,6 +20,9 @@
         </a>
     </p>
 
+
+    {#  Похожие посты  #}
+
     <h2>Similar posts</h2>
     {% for post in similar_posts %}
         <p>
@@ -26,12 +32,13 @@
         There are no similar posts yet.
     {% endfor %}
 
+    {#  Комментарии  #}
+
     {% with comments.count as total_comments %}
         <h2>
           {{ total_comments }} comment{{ total_comments|pluralize }}
         </h2>
     {% endwith %}
-
     {%for comment in comments %}
         <div class="comment">
             <p class="info">
@@ -39,11 +46,26 @@
             {{ comment.created }}
             </p>
             {{ comment.body|linebreaks }}
-            <p>Rating: {{ comment.comment_rating.rating }}</p>
+
+            {#  Рейтинг комментария  #}
+
+{#            <p>Rating: {{ comment.comment_rating.rating }}</p>#}
+{#            {% if request.user.is_authenticated %}#}
+{#                <form action="{% url '.' comment.pk %}" method="post">#}
+{#                    {% csrf_token %}#}
+{#                    <input type="submit" name = '+' value="{{ post_rating }}">#}
+{#                    <input type="submit" name = '-' value="-">#}
+{#                </form>#}
+{#                {% else %}#}
+{#                    <p>Only authorized users can change the rating of a comment</p>#}
+{#            {% endif %}#}
         </div>
     {% empty %}
         <p>No comments</p>
     {% endfor %}
+
+    {#  Добавление комментария  #}
+
     {% if new_comment %}
         <h2>Your comment has been added.</h2>
         <h3><a href= {{ post.get_absolute_url }}> If you want add new comment click here</a></h3>

@@ -17,7 +17,7 @@ class CommentForm(forms.ModelForm):
 
 class CommentRatingForm(forms.ModelForm):
 
-    # rating_choice = forms.ModelChoiceField(widget=forms.RadioSelect(), empty_label=None)
+    post_rating = forms.IntegerField()
 
     class Meta:
         model = CommentRating
@@ -29,6 +29,12 @@ class SearchForm(forms.Form):
 
 
 class PostForm(forms.ModelForm):
+    #
+    # def __init__(self):
+    #     super().__init__(self, *args, **kwargs)
+    #     self.fields['author'] = request.user
+
     class Meta:
         model = Post
-        fields = ('title', 'body', 'tags')
+        widgets = {'author': forms.HiddenInput()}
+        fields = ('title', 'body', 'tags', 'author')

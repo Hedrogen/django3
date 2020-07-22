@@ -132,11 +132,6 @@ def post_share(request, post_id):
     return render(request, 'blog/post/share.html', {'post': post, 'form': form, 'sent': sent})
 
 
-'''  Относится к PostCreate
-Ничего нихера не создается, нужно как-то передать
-параметр user для поля author'''
-
-
 class PostCreate(View):
     def get(self, request):
         post_form = PostForm(request.POST)
@@ -147,22 +142,8 @@ class PostCreate(View):
         post_form = PostForm(request.POST)
         print('\n\n\n USER[POST]: \n', request.user, '\n\n\n')
         if post_form.is_valid():
-            # post_form.save(commit=False)
-            # post_form.author = request.user
-            # print('\n\n\n AUTHOR:::\n', post_form.author, '\n\n\n')
-            # post_form.save()
             post_form.save(commit=False)
             post_form.instance.author = request.user
             post_form.save()
 
             return render(request, 'blog/create/post_success_created.html')
-
-
-# def comment_rating_change(request, comment_id):
-#     comment = get_object_or_404(Comment, pk=comment_id)
-#     if comment.comment_rating.get(request.POST('+')):
-#         comment.comment_rating.rating -= 1
-#     else:
-#         comment.comment_rating.rating += 1
-#
-

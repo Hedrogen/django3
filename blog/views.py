@@ -11,10 +11,17 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 
 
+import logging
+
+
+logger = logging.getLogger('blog_views')
+
+
 # отображение списка статей
 
 
 def post_list(request, tag_slug=None):
+
     object_list = Post.published.all()
 
     tag = None
@@ -26,6 +33,8 @@ def post_list(request, tag_slug=None):
 
     paginator = Paginator(object_list, 3)
     page = request.GET.get('page')
+
+    logger.info('Отображение списка постов')
 
     try:
         posts = paginator.page(page)
@@ -43,14 +52,14 @@ def post_list(request, tag_slug=None):
 #     paginate_by = 3
 #     template_name = 'blog/post/list.html'
 
-#  Поиск по телу и загаловку статьи
-
 
 def post_search(request):
+
+    """ Функция поиска постов по содержанию тела поста и загаловку статьи"""
+
     form = SearchForm()
     query = None
     results = []
-
     if 'query' in request.GET:
         form = SearchForm(request.GET)
         if form.is_valid():
@@ -62,18 +71,16 @@ def post_search(request):
                 similitiry=TrigramSimilarity('title', query),
                 rank=SearchRank(search_vector, search_query)
             ).filter(rank__gte=0.3).order_by('-similitiry')
-
             # results = Post.objects.annotate(
             #     similarity=TrigramSimilarity('title', query),
             # ).filter(similarity__gt=0.3).order_by('-similarity')
-
+    logger.info('Поиск постов')
     return render(request, 'blog/post/search.html', {'form_search': form, 'query': query, 'results': results})
 
 
-# детальное отображение статьи
-
-
 def post_detail(request, year, month, day, post):
+
+    """ Детальное отображение поста """
 
     post = get_object_or_404(Post,
                              slug=post,
@@ -88,15 +95,14 @@ def post_detail(request, year, month, day, post):
     new_comment = None
 
     if request.method == 'POST':
-        # comments_rating = CommentRatingForm(data=request.POST)
         comment_form = CommentForm(data=request.POST)
         if comment_form.is_valid():
             new_comment = comment_form.save(commit=False)
             new_comment.post = post
+            logger.info('Добавление комментария')
             new_comment.save()
-        # if comments_rating.is_valid():
-        #     comments_rating.save()
     else:
+        logger.info('Загрузка формы комментария')
         comment_form = CommentForm()
 
     post_tags_ids = post.tags.values_list('id', flat=True)
@@ -113,6 +119,7 @@ def post_detail(request, year, month, day, post):
 
 
 def post_share(request, post_id):
+
     post = get_object_or_404(Post, id=post_id, status='published')
     sent = False
 
@@ -123,8 +130,8 @@ def post_share(request, post_id):
             post_url = request.build_absolute_uri(post.get_absolute_url())
             subject = '{} ({}) recommends you reading " {} "'.format(cd['name'], cd['email'], post.title)
             message = 'Read "{}" at {}\n\n{}\'s comments:{}'.format(post.title, post_url, cd['name'], cd['comments'])
-            # send_mail(subject, message, 'gitaglotus@gmail.com', [cd['to']])
-            send_mail(subject, message, 'admin@blog.com', [cd['to']])
+            send_mail(subject, message, 'gitaglotus@gmail.com', [cd['to']])
+            # send_mail(subject, message, 'admin@blog.com', [cd['to']])
             sent = True
     else:
         form = EmailPostForm()
@@ -133,17 +140,19 @@ def post_share(request, post_id):
 
 
 class PostCreate(View):
+
+    """ Отвечает за создание поста """
+
     def get(self, request):
+        logger.info('Отображение формы поста')
         post_form = PostForm(request.POST)
-        print('\n\n\n USER[GET]: \n', request.user.id, '\n\n\n')
         return render(request, 'blog/create/post_create.html', {'post_form': post_form})
 
     def post(self, request):
         post_form = PostForm(request.POST)
-        print('\n\n\n USER[POST]: \n', request.user, '\n\n\n')
         if post_form.is_valid():
             post_form.save(commit=False)
             post_form.instance.author = request.user
             post_form.save()
-
+            logger.info('Cоздание поста')
             return render(request, 'blog/create/post_success_created.html')

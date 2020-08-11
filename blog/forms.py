@@ -29,10 +29,6 @@ class SearchForm(forms.Form):
 
 
 class PostForm(forms.ModelForm):
-    #
-    # def __init__(self):
-    #     super().__init__(self, *args, **kwargs)
-    #     self.fields['author'] = request.user
 
     class Meta:
         model = Post

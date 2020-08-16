@@ -14,12 +14,18 @@
     {% for image in images %}
         <img src="{{ image.image.url }}"  alt="">
     {% endfor %}
-    <p>
-        <a href="{% url "blog:post_share" post.id %}">
-        Share this post
-        </a>
-    </p>
-
+{#    <p>#}
+{#        <a href="{% url "blog:post_share" post.id %}">#}
+{#        Share this post#}
+{#        </a>#}
+{#    </p>#}
+    {% if request.user.is_authenticated and post.author == request.user or request.user == user.is_staff%}
+        <p>
+            <a href="{% url "blog:post_edit_url" slug=post.slug %}">
+            Edit
+            </a>
+        </p>
+    {% endif %}
 
     {#  Похожие посты  #}
 
@@ -42,7 +48,7 @@
     {%for comment in comments %}
         <div class="comment">
             <p class="info">
-            Comment {{ forloop.counter }} by {{ comment.name }}
+            Comment {{ forloop.counter }} by {{ comment.user }}
             {{ comment.created }}
             </p>
             {{ comment.body|linebreaks }}
@@ -65,16 +71,20 @@
     {% endfor %}
 
     {#  Добавление комментария  #}
-
-    {% if new_comment %}
-        <h2>Your comment has been added.</h2>
-        <h3><a href= {{ post.get_absolute_url }}> If you want add new comment click here</a></h3>
-    {% else %}
-        <h2>Add a new comment</h2>
-        <form method="post">
-            {{ comment_form.as_p }}
-            {% csrf_token %}
-            <p><input type="submit" value="Add comment"></p>
-        </form>
+    <h2>New Comment</h2>
+     {% if request.user.is_authenticated %}
+        {% if new_comment %}
+            <h2>Your comment has been added.</h2>
+            <h3><a href= {{ post.get_absolute_url }}> If you want add new comment click here</a></h3>
+        {% else %}
+            <h2>Add a new comment</h2>
+            <form method="post">
+                {{ comment_form.as_p }}
+                {% csrf_token %}
+                <p><input type="submit" value="Add comment"></p>
+            </form>
+        {% endif %}
+         {% else %}
+         <h2>Only authorized users can add comments, you can <a href="{% url 'accounts:login' %}">log-in</a></h2>
     {% endif %}
 {% endblock %}

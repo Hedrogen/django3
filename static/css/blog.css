@@ -1,0 +1,175 @@
+body {
+   /* margin:0;
+    padding:0; */
+    font-family:helvetica, sans-serif;
+}
+
+a {
+    color: #14904d;
+    text-decoration:none;
+}
+
+h1 {
+    font-weight:normal;
+    border-bottom:1px solid #bbb;
+    padding:0 0 10px 0;
+}
+
+h2 {
+    font-weight:normal;
+    margin:30px 0 0;
+}
+
+#content {
+    float:left;
+    width:60%;
+    padding:0 0 0 30px;
+}
+
+#sidebar {
+    float:right;
+    width:30%;
+    padding:10px;
+    background:#efefef;
+    height:100%;
+}
+
+p.date {
+    color:#ccc;
+    font-family: georgia, serif;
+    font-size: 12px;
+    font-style: italic;
+}
+
+/* pagination */
+.pagination {
+    margin:40px 0;
+    font-weight:bold;
+}
+
+/* forms */
+label {
+    float:left;
+    clear:both;
+    color:#333;
+    margin-bottom:4px;
+}
+input, textarea {
+    clear:both;
+    float:left;
+    margin:0 0 10px;
+    background: #ededed;
+    border: 0;
+    padding:6px 10px;
+    font-size:12px;
+}
+input[type=submit] {
+    font-weight:bold;
+    background: #278609;
+    color: #eeebeb;
+    padding:10px 20px;
+    font-size:14px;
+    text-transform:uppercase;
+}
+.errorlist {
+    color:#cc0033;
+    float:left;
+    clear:both;
+    padding-left:10px;
+}
+
+/* comments */
+.comment {
+    padding:10px;
+}
+.comment:nth-child(even) {
+    background:#efefef;
+}
+
+.comment .info {
+    font-weight:bold;
+    font-size:12px;
+    color:#666;
+}
+
+/* верхняя панель*/
+
+.topnav {
+    background-color: #333;
+    overflow: hidden;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+/* Style the links inside the navigation bar */
+.topnav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+/* Add a color to the active/current link */
+.topnav a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+/*.topnav #myacc {       */
+/*    float: right;      */
+/*    padding-left: 40px;*/
+/*}                      */
+
+.topnav .myacc {
+    float: right;
+    padding-left: 40px;
+}
+
+.side_text {
+    background-color: #b1e8d2;
+}
+
+/* messages */
+ul.messages {
+    margin:10px 100px;
+    padding:0;
+    list-style-type:
+    none;
+}
+ul.messages li.success,
+ul.messages li.warning,
+ul.messages li.error,
+ul.messages li.info {
+    margin:0;
+    padding:14px 20px;
+    list-style:none;
+    color:#fff;
+}
+
+ul.messages li.success { background:#81ce81; }
+ul.messages li.success a { color:#0ac33e; }
+
+ul.messages li.error { background:#a30029; color:#e9828e; }
+ul.messages li.error a { color:#e9828e; }
+
+ul.messages li.info { background:#faffae; color:#696b4e; }
+ul.messages li.info a { color:#1586de; }
+
+ul.messages li.warning { background:#de9404; }
+ul.messages li.warning a { color:#f49000; }
+
+ul.messages li a.close {
+    margin:0;
+    float:right;
+    opacity:1;
+    border:0;
+    box-shadow:none;
+    text-shadow:none;
+}

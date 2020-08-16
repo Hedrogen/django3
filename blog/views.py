@@ -42,7 +42,6 @@ def post_list(request, tag_slug=None):
         posts = paginator.page(1)
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
-    # posts = Post.published.all()
     return render(request, 'blog/post/list.html', {'posts': posts, 'page': page, 'tag': tag, 'tags': tags})
 
 
@@ -97,10 +96,13 @@ def post_detail(request, year, month, day, post):
     if request.method == 'POST':
         comment_form = CommentForm(data=request.POST)
         if comment_form.is_valid():
-            new_comment = comment_form.save(commit=False)
-            new_comment.post = post
+            comment_form = comment_form.save(commit=False)
+            comment_form.post = post
+            # post_form.instance.author = request.user
+            # comment_form.instance.user = request.user
             logger.info('Добавление комментария')
-            new_comment.save()
+            comment_form.user = request.user
+            comment_form.save()
     else:
         logger.info('Загрузка формы комментария')
         comment_form = CommentForm()
@@ -156,3 +158,25 @@ class PostCreate(View):
             post_form.save()
             logger.info('Cоздание поста')
             return render(request, 'blog/create/post_success_created.html')
+
+
+class PostEdit(View):
+
+    """ Отвечает за измение постов """
+
+    def get(self, request, slug):
+        post = Post.objects.get(slug=slug)
+        post_form = PostForm(instance=post)
+        return render(request, 'blog/post/post_edit.html', {'post_form': post_form, 'post': post})
+
+    def post(self, request, slug):
+        post = Post.objects.get(slug=slug)
+        post_form = PostForm(request.POST, instance=post)
+
+        print('\n\n\n', post.author, '\n\n\n')
+        if post_form.is_valid():
+            post_form.save(commit=False)
+            logger.info('Обновление поста')
+            post_form.save()
+            return redirect(post)
+        return render(request, 'blog/post/post_edit.html', {'post_form': post_form, 'post': post})

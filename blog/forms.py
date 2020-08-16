@@ -1,5 +1,6 @@
 from django import forms
 from . models import Comment, Post, CommentRating
+from ckeditor.widgets import CKEditorWidget
 
 
 class EmailPostForm(forms.Form):
@@ -12,7 +13,8 @@ class EmailPostForm(forms.Form):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ('name', 'email', 'body')
+        widgets = {'user': forms.HiddenInput()}
+        fields = ('body', 'user')
 
 
 class CommentRatingForm(forms.ModelForm):
@@ -33,4 +35,4 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         widgets = {'author': forms.HiddenInput()}
-        fields = ('title', 'body', 'tags', 'author')
+        fields = ['title', 'body', 'tags', 'author']

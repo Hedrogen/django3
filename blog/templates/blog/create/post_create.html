@@ -6,12 +6,19 @@
     {% if request.user.is_authenticated %}
         <form action="{% url 'blog:post_create_url' %}" method="post">
             {% csrf_token %}
-            {{ post_form.as_p }}
+{#            {{ post_form.as_p }}#}
+            {{ post_form.media }}
+            <h2>Title</h2>
+            {{ post_form.title }}<br><br>
+            <h2>body</h2>
+            {{ post_form.body }}<br>
+            <h2>tags</h2>
+            {{ post_form.tags }}<br>
             <input type="submit" value="create">
         </form>
     {% else %}
         <h1>Unauthorized users cannot create posts</h1>
         <p>If you want create new post you need <a href="{% url 'accounts:login' %}">login</a></p>
-        <p>If you don't have account you can <a href="#reg">create new account</a></p>
+        <p>If you don't have account you can <a href="{% url 'accounts:registration' %}">create new account</a></p>
     {% endif %}
 {% endblock %}

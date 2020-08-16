@@ -1,0 +1,23 @@
+{% extends 'global_base.html' %}
+{% load blog_tags %}
+
+{% block title %} Post edit {% endblock %}
+
+{% block content %}
+    {% if request.user.is_authenticated and post.author == request.user or request.user == user.is_staff%}
+        <form action="{% url 'blog:post_edit_url' slug=post.slug %}" method="post">
+            {% csrf_token %}
+{#            {{ post_form.as_p | markdown }}#}
+            {{ post_form.media }}
+            <h2>Title</h2>
+            {{ post_form.title }}<br><br>
+            <h2>Body</h2>
+            {{ post_form.body|safe }}<br>
+            <h2>Tags</h2>
+            {{ post_form.tags }}<br>
+            <input type="submit" value="update">
+        </form>
+    {% else %}
+        <p>You have not permissions edit this post</p>
+    {% endif %}
+{% endblock %}

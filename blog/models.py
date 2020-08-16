@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from time import time
 from django.conf import settings
+from ckeditor_uploader.fields import RichTextUploadingField
 
 
 def make_slug(st):
@@ -31,7 +32,8 @@ class Post(models.Model):
     slug = models.SlugField(max_length=250, unique_for_date='publish')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts', blank=True)
     # author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='blog_posts')
-    body = models.TextField()
+    # body = models.TextField()
+    body = RichTextUploadingField(blank=True, null=True)
     publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -67,7 +69,8 @@ class Comment(models.Model):
     """ Модель комментария """
 
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
-    name = models.CharField(max_length=80)
+    name = models.CharField(max_length=80)  # В будущем надо будет убрать
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_comment', blank=True, null=True)
     email = models.EmailField()
     body = models.TextField(max_length=15000)
     created = models.DateTimeField(auto_now_add=True)

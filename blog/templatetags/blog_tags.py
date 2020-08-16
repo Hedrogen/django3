@@ -1,6 +1,7 @@
 from django.utils.safestring import mark_safe
 from django import template
-from . .models import Post
+from .  .models import Post
+from django.contrib.auth.models import User
 import markdown
 
 
@@ -15,6 +16,11 @@ def markdown_format(text):
 @register.simple_tag
 def total_posts():
     return Post.published.count()
+
+
+@register.simple_tag
+def total_users():
+    return User.objects.all().count()
 
 
 @register.inclusion_tag('blog/post/all_tags.html')

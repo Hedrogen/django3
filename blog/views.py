@@ -16,7 +16,6 @@ import logging
 
 logger = logging.getLogger('blog_views')
 
-
 # отображение списка статей
 
 
@@ -98,8 +97,6 @@ def post_detail(request, year, month, day, post):
         if comment_form.is_valid():
             comment_form = comment_form.save(commit=False)
             comment_form.post = post
-            # post_form.instance.author = request.user
-            # comment_form.instance.user = request.user
             logger.info('Добавление комментария')
             comment_form.user = request.user
             comment_form.save()
@@ -170,13 +167,29 @@ class PostEdit(View):
         return render(request, 'blog/post/post_edit.html', {'post_form': post_form, 'post': post})
 
     def post(self, request, slug):
+
         post = Post.objects.get(slug=slug)
         post_form = PostForm(request.POST, instance=post)
+        author = post.author
 
-        print('\n\n\n', post.author, '\n\n\n')
         if post_form.is_valid():
             post_form.save(commit=False)
             logger.info('Обновление поста')
+            post_form.instance.author = author
             post_form.save()
             return redirect(post)
         return render(request, 'blog/post/post_edit.html', {'post_form': post_form, 'post': post})
+
+
+class PostDelete(View):
+
+    """ Отвечает за удаление поста """
+
+    def get(self, request, slug):
+        post = Post.objects.get(slug=slug)
+        return render(request, 'blog/post/post_delete.html', {'post': post})
+
+    def post(self, request, slug):
+        post = Post.objects.get(slug=slug)
+        post.delete()
+        return redirect('blog:post_list')

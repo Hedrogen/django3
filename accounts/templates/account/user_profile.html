@@ -1,0 +1,35 @@
+{% extends 'global_base.html' %}
+{% load blog_tags %}
+
+{% block title %}{{user_profile.username}}{% endblock %}
+
+{% block content %}
+    <h1>Profile: {{ user_profile.username }}</h1>
+    <h2>Date joined: {{ user_profile.date_joined|date:'d.m.y' }} <br><br> User status:
+    {% if user_profile.is_staff %}
+        Admin
+    {% else %}
+        User
+    {% endif %}
+    </h2>
+    <h2>Published posts:</h2>
+    {% for post  in posts %}
+        <h3><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
+        <p class="tags">
+          Tags:
+          {% for tag in post.tags.all %}
+            <a href="{% url "blog:post_list_by_tag" tag.slug %}">
+              {{ tag.name }}
+            </a>
+            {% if not forloop.last %}, {% endif %}
+          {% endfor %}
+        </p>
+        <p class="date">Published {{ post.publish|date:'d.m.y'}}</p>
+        <h3>{{ post.body|markdown|truncatewords_html:30 }}</h3><br><br>
+    {% empty %}
+        <h3>No published posts</h3>
+    {% endfor %}
+
+
+{% endblock %}
+

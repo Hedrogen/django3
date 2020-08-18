@@ -1,5 +1,5 @@
 from django.urls import path
-from . views import UserLogin, user_account, UserRegistration, EditProfile
+from . views import UserLogin, user_account, UserRegistration, EditProfile, UserProfile
 from django.contrib.auth.views import *
 from django.urls import reverse_lazy
 
@@ -7,6 +7,7 @@ app_name = 'accounts'
 
 urlpatterns = [
     path('', EditProfile.as_view(), name='account'),  # требуется серьезная доработка
+    path('profile/<str:username>', UserProfile.as_view(), name='user_profile'),  # ВАЖНО!!!
 
     path('login/', LoginView.as_view(
         template_name='account/login.html'), name='login'),

@@ -10,7 +10,7 @@ from django.contrib import messages
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
-
+from django.shortcuts import get_object_or_404
 
 from blog.models import Post
 
@@ -45,13 +45,26 @@ class UserLogin(View):
         return render(request, 'account/login.html', {'form': form})
 
 
-# class UserProfile(ListView):
-#
-#     """ Посты, опубликованные пользователем """
-#
-#     template_name = 'account/user_profile'
-#     queryset = Post.objects.filter(author='').order_by('-published')
-#     paginate_by = 10
+class UserProfile(ListView):
+
+    template_name = 'account/user_profile.html'
+    # context_object_name = ''
+
+    def get_queryset(self):
+        """ Если не определить, то ничего не работает"""
+        pass
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(UserProfile, self).get_context_data(*args, **kwargs)
+        # context = super(ListView, self).get_context_data(self.kwargs)
+        if self.kwargs.get('username') is not None:
+            user_profile = get_object_or_404(User, username=self.kwargs.get('username'))
+            user_posts = user_profile.blog_posts.all()
+            # tags = user_posts.tags.all()
+            context['user_profile'] = user_profile
+            context['posts'] = user_posts
+            # context['tags'] = tags
+        return context
 
 
 class UserRegistration(View):

@@ -23,12 +23,12 @@
       {% endfor %}
     </p>
     <p class="date">
-      Published {{ post.publish }} by {{ post.author }}
-    </p>
+        Published {{ post.publish|date:"d.m.y" }} by <a href="{% url "accounts:user_profile" post.author %}">{{ post.author }}</a></p>
       {# markdown  #}
     {{ post.body|markdown|truncatewords_html:30 }}
 {#      |markdown|truncatewords_html:30#}
     <img src="{{ post.images.image.url }} " alt="">
+{#      <input type="submit" value="comments"><br><br><br>#}
   {% endfor %}
   {% include "pagination.html" with page=posts %}
 {% endblock %}

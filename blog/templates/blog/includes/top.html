@@ -6,6 +6,7 @@
     {% if request.user.is_authenticated %}
         <a class="myacc" href="{% url "accounts:logout" %}">Logout</a>
         <a class="myacc" href="{% url "accounts:account" %}">My account</a>
+        <a class="myacc">Hello, {{ request.user }}!</a>
     {% else %}
         <a class="myacc" href="{% url 'accounts:registration' %}">Registration</a>
         <a class="myacc" href="{% url "accounts:login" %}">Login</a>

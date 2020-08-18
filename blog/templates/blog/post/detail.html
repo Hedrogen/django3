@@ -19,10 +19,13 @@
 {#        Share this post#}
 {#        </a>#}
 {#    </p>#}
-    {% if request.user.is_authenticated and post.author == request.user or request.user == user.is_staff%}
+    {% if post.author == request.user or request.user.is_staff == True%}
         <p>
             <a href="{% url "blog:post_edit_url" slug=post.slug %}">
             Edit
+            </a>
+            <a href="{% url "blog:post_delete_url" slug=post.slug %}">
+               Delete
             </a>
         </p>
     {% endif %}

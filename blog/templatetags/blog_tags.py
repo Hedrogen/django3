@@ -29,6 +29,9 @@ def all_tags():
     return {'tags': tags}
 
 
+# @register.inclusion_tag('blog/post/tags_by_user.html')
+#
+
 @register.inclusion_tag('blog/post/latest_posts.html')
 def show_latest_posts(count=2):
     latest_posts = Post.published.order_by('-publish')[:count]

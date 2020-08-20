@@ -7,11 +7,12 @@ from django.urls import reverse
 from time import time
 from django.conf import settings
 from ckeditor_uploader.fields import RichTextUploadingField
+from random import randint
 
 
 def make_slug(st):
 
-    new_slug = slugify(st) + '-' + str(int(time()))
+    new_slug = slugify(st) + '-' + str(int(time())) + '-' + str(int(randint(0, 100)))
     return new_slug
 
 
@@ -29,10 +30,8 @@ class Post(models.Model):
         ('published', 'Published'),
     )
     title = models.CharField(max_length=250)
-    slug = models.SlugField(max_length=250, unique_for_date='publish')
+    slug = models.SlugField(max_length=250, unique_for_date='publish', unique=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts', blank=True)
-    # author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='blog_posts')
-    # body = models.TextField()
     body = RichTextUploadingField(blank=True, null=True)
     publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
@@ -71,7 +70,7 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     name = models.CharField(max_length=80)  # В будущем надо будет убрать
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_comment', blank=True, null=True)
-    email = models.EmailField()
+    email = models.EmailField()  # В будущем удалить
     body = models.TextField(max_length=15000)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

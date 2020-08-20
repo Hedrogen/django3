@@ -14,11 +14,14 @@
     {% for image in images %}
         <img src="{{ image.image.url }}"  alt="">
     {% endfor %}
+
 {#    <p>#}
 {#        <a href="{% url "blog:post_share" post.id %}">#}
 {#        Share this post#}
 {#        </a>#}
 {#    </p>#}
+
+
     {% if post.author == request.user or request.user.is_staff == True%}
         <p>
             <a href="{% url "blog:post_edit_url" slug=post.slug %}">

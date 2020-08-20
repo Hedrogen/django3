@@ -2,11 +2,17 @@
 
 {% block title %}Delete post{% endblock %}
 
+
 {% block content %}
-    <h1>Delete post {{ post.title }}</h1>
-    <h3>If you really want to delete it click the button</h3>
-    <form action="{% url 'blog:post_delete_url' slug=post.slug%}" method="post">
-        {% csrf_token %}
-        <input type="submit" value="delete">
-    </form>
+    {% if post.author == request.user or request.user.is_staff == True%}
+        <h1>Delete post {{ post.title }}</h1>
+        <h3>If you really want to delete it click the button</h3>
+        <form action="{% url 'blog:post_delete_url' slug=post.slug%}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="delete">
+        </form>
+    {% else %}
+        <h1>Not enough rights</h1>
+        <h3>You are not part of the development team or the creator of the post.</h3>
+    {% endif %}
 {% endblock %}

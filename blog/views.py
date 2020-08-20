@@ -9,7 +9,7 @@ from .forms import EmailPostForm, CommentForm, SearchForm, PostForm, CommentRati
 from .models import Post, Comment, CommentRating
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
-
+from django.http import HttpResponse
 
 import logging
 
@@ -26,11 +26,13 @@ def post_list(request, tag_slug=None):
     tag = None
     tags = Post.tags.all()
 
+    paginate_number = 3
+
     if tag_slug:
         tag = get_object_or_404(Tag, slug=tag_slug)
         object_list = object_list.filter(tags__in=[tag])
 
-    paginator = Paginator(object_list, 3)
+    paginator = Paginator(object_list, paginate_number)
     page = request.GET.get('page')
 
     logger.info('Отображение списка постов')
@@ -92,17 +94,20 @@ def post_detail(request, year, month, day, post):
 
     new_comment = None
 
-    if request.method == 'POST':
-        comment_form = CommentForm(data=request.POST)
-        if comment_form.is_valid():
-            comment_form = comment_form.save(commit=False)
-            comment_form.post = post
-            logger.info('Добавление комментария')
-            comment_form.user = request.user
-            comment_form.save()
-    else:
-        logger.info('Загрузка формы комментария')
-        comment_form = CommentForm()
+    try:
+        if request.method == 'POST':
+            comment_form = CommentForm(data=request.POST)
+            if comment_form.is_valid():
+                comment_form = comment_form.save(commit=False)
+                comment_form.post = post
+                logger.info('Добавление комментария')
+                comment_form.user = request.user
+                comment_form.save()
+        else:
+            logger.info('Загрузка формы комментария')
+            comment_form = CommentForm()
+    except ValueError:
+        return HttpResponse('Only authorized users can add comments', status=403)
 
     post_tags_ids = post.tags.values_list('id', flat=True)
     similar_posts = Post.published.filter(tags__in=post_tags_ids).exclude(id=post.id)
@@ -148,13 +153,16 @@ class PostCreate(View):
         return render(request, 'blog/create/post_create.html', {'post_form': post_form})
 
     def post(self, request):
-        post_form = PostForm(request.POST)
-        if post_form.is_valid():
-            post_form.save(commit=False)
-            post_form.instance.author = request.user
-            post_form.save()
-            logger.info('Cоздание поста')
-            return render(request, 'blog/create/post_success_created.html')
+        try:
+            post_form = PostForm(request.POST)
+            if post_form.is_valid():
+                post_form.save(commit=False)
+                post_form.instance.author = request.user
+                post_form.save()
+                logger.info('Cоздание поста')
+                return render(request, 'blog/create/post_success_created.html')
+        except ValueError:
+            return HttpResponse('You don\'t have permissions make this', status=403)
 
 
 class PostEdit(View):
@@ -173,11 +181,14 @@ class PostEdit(View):
         author = post.author
 
         if post_form.is_valid():
-            post_form.save(commit=False)
-            logger.info('Обновление поста')
-            post_form.instance.author = author
-            post_form.save()
-            return redirect(post)
+            if request.user == post.author or request.user.is_staff:
+                post_form.save(commit=False)
+                logger.info('Обновление поста')
+                post_form.instance.author = author
+                post_form.save()
+                return redirect(post)
+            else:
+                return HttpResponse(status=403)
         return render(request, 'blog/post/post_edit.html', {'post_form': post_form, 'post': post})
 
 
@@ -187,9 +198,14 @@ class PostDelete(View):
 
     def get(self, request, slug):
         post = Post.objects.get(slug=slug)
-        return render(request, 'blog/post/post_delete.html', {'post': post})
+        if request.user == post.author or request.user.is_staff:
+            return render(request, 'blog/post/post_delete.html', {'post': post})
+        return redirect('blog:post_list')
 
     def post(self, request, slug):
         post = Post.objects.get(slug=slug)
-        post.delete()
-        return redirect('blog:post_list')
+        if request.user == post.author or request.user.is_staff:
+            post.delete()
+            return redirect('blog:post_list')
+        else:
+            return HttpResponse('You don\'t have permissions make this', status=403)

@@ -22,9 +22,6 @@ class BlogFormsTest(TestCase):
         comment = CommentForm({'user': author})
         self.assertFalse(comment.is_valid())
 
-        comment = CommentForm({'body': 'test_body', 'user': None})
-        self.assertFalse(comment.is_valid())
-
         comment = CommentForm({'body': '', 'user': author})
         self.assertFalse(comment.is_valid())
 

@@ -68,7 +68,7 @@ def post_search(request):
             search_vector = SearchVector('tags__name') + SearchVector('title') + SearchVector('body')
             search_query = SearchQuery(query)
             # results = list(set(Post.objects.annotate(search=search_vector).filter(search=search_query)))
-            results = (Post.objects.annotate(search=search_vector).filter(search=search_query))
+            results = list(set(Post.objects.annotate(search=search_vector).filter(search=search_query)))
             # results = list(set(Post.objects.annotate(rank=search_rank).order_by('-rank').\
 
     logger.info('Поиск постов')

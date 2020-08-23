@@ -3,12 +3,13 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
+from django.utils.decorators import method_decorator
 from django.views.generic import View, DetailView, ListView, FormView, CreateView
 from .forms import LoginForm, UserRegistrationForm, UserEditForm, ProfileEditForm
 from .models import Profile
 from django.contrib import messages
 from django.dispatch import receiver
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 
@@ -99,28 +100,34 @@ class EditProfile(View):
     """ Изменение профиля пользователя """
 
     def get(self, request):
-        user_form = UserEditForm(instance=request.user)
-        profile_form = ProfileEditForm(instance=request.user.profile)
+        try:
+            user_form = UserEditForm(instance=request.user)
+            profile_form = ProfileEditForm(instance=request.user.profile)
 
-        return render(request, 'account/user_account.html', {'user_form': user_form,
-                                                             'profile_form': profile_form})
+            return render(request, 'account/user_account.html', {'user_form': user_form,
+                                                                 'profile_form': profile_form})
+        except AttributeError:
+            return render(request, 'account/user_account_error.html', status=404)
 
     def post(self, request):
-        user_form = UserEditForm(
-            instance=request.user,
-            data=request.POST)
-        profile_form = ProfileEditForm(
-            instance=request.user.profile,
-            data=request.POST,
-            files=request.FILES)
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
-            messages.success(request, 'Profile updated')
-        else:
-            messages.error(request, 'Error updating profile')
-        return render(request, 'account/user_account.html', {'user_form': user_form,
-                                                             'profile_form': profile_form})
+        try:
+            user_form = UserEditForm(
+                instance=request.user,
+                data=request.POST)
+            profile_form = ProfileEditForm(
+                instance=request.user.profile,
+                data=request.POST,
+                files=request.FILES)
+            if user_form.is_valid() and profile_form.is_valid():
+                user_form.save()
+                profile_form.save()
+                messages.success(request, 'Profile updated')
+            else:
+                messages.error(request, 'Error updating profile')
+            return render(request, 'account/user_account.html', {'user_form': user_form,
+                                                                 'profile_form': profile_form})
+        except AttributeError:
+            return render(request, 'account/user_account_error.html', status=404)
 
 
 @login_required

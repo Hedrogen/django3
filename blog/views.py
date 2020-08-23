@@ -55,7 +55,7 @@ def post_list(request, tag_slug=None):
 
 def post_search(request):
 
-    """ Функция поиска постов по содержанию тела поста и загаловку статьи"""
+    """ Функция поиска постов по содержанию тела поста, загаловку статьи и тегам"""
 
     form = SearchForm()
     query = None
@@ -64,16 +64,13 @@ def post_search(request):
         form = SearchForm(request.GET)
         if form.is_valid():
             query = form.cleaned_data['query']
-            search_vector = SearchVector('title', weight='A') + SearchVector('body', weight='B')
+
+            search_vector = SearchVector('tags__name') + SearchVector('title') + SearchVector('body')
             search_query = SearchQuery(query)
-            results = Post.objects.annotate(
-                search=search_vector,
-                similitiry=TrigramSimilarity('title', query),
-                rank=SearchRank(search_vector, search_query)
-            ).filter(rank__gte=0.3).order_by('-similitiry')
-            # results = Post.objects.annotate(
-            #     similarity=TrigramSimilarity('title', query),
-            # ).filter(similarity__gt=0.3).order_by('-similarity')
+            # results = list(set(Post.objects.annotate(search=search_vector).filter(search=search_query)))
+            results = (Post.objects.annotate(search=search_vector).filter(search=search_query))
+            # results = list(set(Post.objects.annotate(rank=search_rank).order_by('-rank').\
+
     logger.info('Поиск постов')
     return render(request, 'blog/post/search.html', {'form_search': form, 'query': query, 'results': results})
 

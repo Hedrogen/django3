@@ -27,7 +27,7 @@ class CommentRatingForm(forms.ModelForm):
 
 
 class SearchForm(forms.Form):
-    query = forms.CharField()
+    query = forms.CharField(widget=CKEditorWidget)
 
 
 class PostForm(forms.ModelForm):

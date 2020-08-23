@@ -26,5 +26,8 @@
             {% csrf_token %}
             <p><input type="submit" value="Save changes"></p>
         </form>
+    {% else %}
+        <h1>You can't edit your account if you don't have one.</h1>
+        <p>You can<a href="{% url 'accounts:login' %}">Log-in</a> or <a href="{% url 'accounts:registration' %}">create <account></account></a></p>
     {% endif %}
 {% endblock %}

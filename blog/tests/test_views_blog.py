@@ -7,7 +7,7 @@ from blog.models import Post
 from blog.views import post_list
 
 
-class PostsTest(TestCase):
+class PostsViewsTest(TestCase):
 
     def setUp(self):
 

@@ -11,8 +11,9 @@
         {% endwith %}
     </h3>
     {% for post in results %}
-        <h4><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h4>
-        {{ post.body|markdown|truncatewords:5 }}
+{#        <h4><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h4>#}
+           {% include 'blog/includes/post_inner.html' %}
+{#        {{ post.body|markdown|truncatewords:5 }}<br><br>#}
     {% empty %}
         <p>There are no results for your query.</p>
     {% endfor %}

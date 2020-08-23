@@ -2,7 +2,6 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.test import Client
 from blog.models import Post
-from time import sleep
 
 
 class PostsListTest(TestCase):

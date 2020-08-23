@@ -1,0 +1,8 @@
+{% extends 'global_base.html' %}
+
+{% block title %} User account error {% endblock %}
+
+{% block content %}
+    <h1>You can't edit your account if you don't have one.</h1>
+    <p>You can<a href="{% url 'accounts:login' %}"> log-in</a> or <a href="{% url 'accounts:registration' %}">create new account</a></p>
+{% endblock %}

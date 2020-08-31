@@ -178,7 +178,7 @@ class PostEdit(View):
         author = post.author
 
         if post_form.is_valid():
-            if request.user == post.author or request.user.is_staff:
+            if request.user == author or request.user.is_staff:
                 post_form.save(commit=False)
                 logger.info('Обновление поста')
                 post_form.instance.author = author

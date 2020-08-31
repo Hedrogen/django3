@@ -125,7 +125,7 @@ USE_L10N = True
 USE_TZ = True
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-LOGIN_REDIRECT_URL = '/blog'
+LOGIN_REDIRECT_URL = '/'
 SITE_ID = 1
 
 # Static files (CSS, JavaScript, Images)

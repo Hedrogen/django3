@@ -1,0 +1,6 @@
+pycharm_projects/settings.py
+.idea
+*.pyc
+venv
+__pycache__
+local_settings.py

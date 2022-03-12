@@ -20,7 +20,7 @@ gunicorn==20.0.4
 idna==2.9
 Markdown==2.6.11
 oauthlib==3.1.0
-Pillow==7.2.0
+Pillow==9.0.1
 pipenv==2018.11.26
 psycopg2==2.7.7
 psycopg2-binary==2.8
